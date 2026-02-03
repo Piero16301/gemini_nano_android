@@ -1,10 +1,10 @@
-name: Analysis
+name: Static code analysis
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
 
 jobs:
   analyze:
@@ -15,4 +15,5 @@ jobs:
         with:
           channel: 'stable'
       - run: flutter pub get
+      - run: dart format --set-exit-if-changed .
       - run: flutter analyze
