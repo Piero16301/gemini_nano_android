@@ -26,4 +26,14 @@ abstract class GeminiNanoAndroidPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  /// Verifica si el dispositivo soporta Gemini Nano vía AI Core.
+  Future<bool> isAvailable() {
+    throw UnimplementedError('isAvailable() has not been implemented.');
+  }
+
+  /// Genera texto basado en un prompt usando el modelo on-device.
+  Future<String> generate(String prompt) {
+    throw UnimplementedError('generate() has not been implemented.');
+  }
 }

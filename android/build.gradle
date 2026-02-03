@@ -11,6 +11,7 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:8.11.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath("com.google.ai.edge.aicore:aicore:0.0.1-exp01")
     }
 }
 
@@ -44,10 +45,13 @@ android {
     }
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 31
     }
 
     dependencies {
+
+        implementation "com.google.mlkit:genai-prompt:1.0.0-beta1"
+        implementation "com.google.android.gms:play-services-tasks:18.0.2"
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.0.0")
     }

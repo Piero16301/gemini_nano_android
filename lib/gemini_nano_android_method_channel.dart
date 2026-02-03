@@ -11,7 +11,34 @@ class MethodChannelGeminiNanoAndroid extends GeminiNanoAndroidPlatform {
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version =
+        await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
+  }
+
+  @override
+  Future<bool> isAvailable() async {
+    try {
+      final bool? result =
+          await methodChannel.invokeMethod<bool>('isAvailable');
+      return result ?? false;
+    } on PlatformException catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Future<String> generate(String prompt) async {
+    final String? result =
+        await methodChannel.invokeMethod<String>('generateText', {
+      'prompt': prompt,
+    });
+    if (result == null) {
+      throw PlatformException(
+        code: 'NULL_RESPONSE',
+        message: 'The model returned null.',
+      );
+    }
+    return result;
   }
 }

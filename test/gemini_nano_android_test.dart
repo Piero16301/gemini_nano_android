@@ -7,13 +7,19 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 class MockGeminiNanoAndroidPlatform
     with MockPlatformInterfaceMixin
     implements GeminiNanoAndroidPlatform {
-
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
+
+  @override
+  Future<bool> isAvailable() => Future.value(true);
+
+  @override
+  Future<String> generate(String prompt) => Future.value('mocked response');
 }
 
 void main() {
-  final GeminiNanoAndroidPlatform initialPlatform = GeminiNanoAndroidPlatform.instance;
+  final GeminiNanoAndroidPlatform initialPlatform =
+      GeminiNanoAndroidPlatform.instance;
 
   test('$MethodChannelGeminiNanoAndroid is the default instance', () {
     expect(initialPlatform, isInstanceOf<MethodChannelGeminiNanoAndroid>());
@@ -21,9 +27,28 @@ void main() {
 
   test('getPlatformVersion', () async {
     GeminiNanoAndroid geminiNanoAndroidPlugin = GeminiNanoAndroid();
-    MockGeminiNanoAndroidPlatform fakePlatform = MockGeminiNanoAndroidPlatform();
+    MockGeminiNanoAndroidPlatform fakePlatform =
+        MockGeminiNanoAndroidPlatform();
     GeminiNanoAndroidPlatform.instance = fakePlatform;
 
     expect(await geminiNanoAndroidPlugin.getPlatformVersion(), '42');
+  });
+
+  test('isAvailable', () async {
+    GeminiNanoAndroid geminiNanoAndroid = GeminiNanoAndroid();
+    MockGeminiNanoAndroidPlatform fakePlatform =
+        MockGeminiNanoAndroidPlatform();
+    GeminiNanoAndroidPlatform.instance = fakePlatform;
+
+    expect(await geminiNanoAndroid.isAvailable(), true);
+  });
+
+  test('generate', () async {
+    GeminiNanoAndroid geminiNanoAndroid = GeminiNanoAndroid();
+    MockGeminiNanoAndroidPlatform fakePlatform =
+        MockGeminiNanoAndroidPlatform();
+    GeminiNanoAndroidPlatform.instance = fakePlatform;
+
+    expect(await geminiNanoAndroid.generate('prompt'), 'mocked response');
   });
 }
