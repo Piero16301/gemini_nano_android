@@ -14,9 +14,9 @@ import 'package:gemini_nano_android/gemini_nano_android.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('getPlatformVersion test', (WidgetTester tester) async {
+  testWidgets('getModelVersion test', (WidgetTester tester) async {
     final GeminiNanoAndroid plugin = GeminiNanoAndroid();
-    final String? version = await plugin.getPlatformVersion();
+    final String? version = await plugin.getModelVersion();
     // The version string depends on the host platform running the test, so
     // just assert that some non-empty string is returned.
     expect(version?.isNotEmpty, true);

@@ -5,12 +5,11 @@ class MockGeminiNanoAndroidPlatform extends GeminiNanoAndroidPlatform {}
 
 void main() {
   group('GeminiNanoAndroidPlatform', () {
-    test(
-        'default implementation of getPlatformVersion throws UnimplementedError',
+    test('default implementation of getModelVersion throws UnimplementedError',
         () {
       final platform = MockGeminiNanoAndroidPlatform();
       expect(
-        () => platform.getPlatformVersion(),
+        () => platform.getModelVersion(),
         throwsUnimplementedError,
       );
     });

@@ -14,8 +14,8 @@ void main() {
       channel,
       (MethodCall methodCall) async {
         switch (methodCall.method) {
-          case 'getPlatformVersion':
-            return '42';
+          case 'getModelVersion':
+            return 'nano-v3';
           case 'isAvailable':
             return true;
           case 'generateText':
@@ -35,8 +35,8 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await platform.getPlatformVersion(), '42');
+  test('getModelVersion', () async {
+    expect(await platform.getModelVersion(), 'nano-v3');
   });
 
   test('isAvailable', () async {

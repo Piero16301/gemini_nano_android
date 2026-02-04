@@ -8,7 +8,7 @@ class MockGeminiNanoAndroidPlatform
     with MockPlatformInterfaceMixin
     implements GeminiNanoAndroidPlatform {
   @override
-  Future<String?> getPlatformVersion() => Future.value('42');
+  Future<String?> getModelVersion() => Future.value('nano-v3');
 
   @override
   Future<bool> isAvailable() => Future.value(true);
@@ -25,13 +25,13 @@ void main() {
     expect(initialPlatform, isInstanceOf<MethodChannelGeminiNanoAndroid>());
   });
 
-  test('getPlatformVersion', () async {
+  test('getModelVersion', () async {
     GeminiNanoAndroid geminiNanoAndroidPlugin = GeminiNanoAndroid();
     MockGeminiNanoAndroidPlatform fakePlatform =
         MockGeminiNanoAndroidPlatform();
     GeminiNanoAndroidPlatform.instance = fakePlatform;
 
-    expect(await geminiNanoAndroidPlugin.getPlatformVersion(), '42');
+    expect(await geminiNanoAndroidPlugin.getModelVersion(), 'nano-v3');
   });
 
   test('isAvailable', () async {

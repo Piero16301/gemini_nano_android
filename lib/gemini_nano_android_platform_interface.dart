@@ -2,6 +2,13 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'gemini_nano_android_method_channel.dart';
 
+/// The interface that implementations of gemini_nano_android must implement.
+///
+/// Platform implementations should extend this class rather than implement it as `GeminiNanoAndroid`
+/// does not consider newly added methods to be breaking changes. Extending this class
+/// (using `extends`) ensures that the subclass will get the default implementation, while
+/// platform implementations that `implements` this interface will be broken by newly added
+/// [GeminiNanoAndroidPlatform] methods.
 abstract class GeminiNanoAndroidPlatform extends PlatformInterface {
   /// Constructs a GeminiNanoAndroidPlatform.
   GeminiNanoAndroidPlatform() : super(token: _token);
@@ -23,16 +30,17 @@ abstract class GeminiNanoAndroidPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  /// Returns the model version used.
+  Future<String?> getModelVersion() {
+    throw UnimplementedError('getModelVersion() has not been implemented.');
   }
 
-  /// Verifica si el dispositivo soporta Gemini Nano vía AI Core.
+  /// Checks if the device supports Gemini Nano via AICore.
   Future<bool> isAvailable() {
     throw UnimplementedError('isAvailable() has not been implemented.');
   }
 
-  /// Genera texto basado en un prompt usando el modelo on-device.
+  /// Generates text based on a prompt using the on-device model.
   Future<String> generate(String prompt) {
     throw UnimplementedError('generate() has not been implemented.');
   }

@@ -1,3 +1,9 @@
+## 0.0.2
+
+* Migrated from `com.google.ai.edge.aicore` to `com.google.mlkit:genai-prompt` API (v1.0.0-beta1).
+* Refactored `isAvailable` logic in Android plugin.
+* Added execution time display to the example application.
+
 ## 0.0.1
 
 * Initial release. Support for text generation via Gemini Nano on Android.

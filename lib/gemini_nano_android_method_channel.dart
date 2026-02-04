@@ -10,9 +10,8 @@ class MethodChannelGeminiNanoAndroid extends GeminiNanoAndroidPlatform {
   final methodChannel = const MethodChannel('gemini_nano_android');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
+  Future<String?> getModelVersion() async {
+    final version = await methodChannel.invokeMethod<String>('getModelVersion');
     return version;
   }
 

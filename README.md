@@ -1,4 +1,4 @@
-# gemini_nano_android
+# Gemini Nano for Android
 
 [![pub package](https://img.shields.io/pub/v/gemini_nano_android.svg)](https://pub.dev/packages/gemini_nano_android)
 [![analysis](https://github.com/Piero16301/gemini_nano_android/actions/workflows/code-analysis.yml/badge.svg)](https://github.com/Piero16301/gemini_nano_android/actions)
@@ -20,8 +20,17 @@ This package enables **offline-first**, latency-free, and privacy-centric genera
 
 Gemini Nano via AI Core is currently available on select flagship Android devices, including but not limited to:
 
-* **Google:** Pixel 9 series, Pixel 10 series (e.g., Pixel 10 Pro XL).
-* **Samsung:** Galaxy S24 series (and newer).
+* **Google:** Pixel 10, Pixel 10 Pro, Pixel 10 Pro XL, Pixel 10 Pro Fold, Pixel 9, Pixel 9 Pro, Pixel 9 Pro XL, Pixel 9 Pro Fold
+* **Honor:** Honor 400 Pro, Magic 6 Pro, Magic 6 RSR, Magic 7, Magic 7 Pro, Magic V3, Magic V5
+* **iQOO:** iQOO 13
+* **Motorola:** Razr 60 Ultra
+* **OnePlus:** OnePlus 13, OnePlus 13s, OnePlus Pad 3
+* **OPPO:** Find N5, Find X8, Find X8 Pro, Reno 14 Pro
+* **POCO:** POCO F7 Ultra, POCO X7 Pro
+* **realme:** realme GT 7 Pro, realme GT 7T
+* **Samsung:** Galaxy S25, Galaxy S25+, Galaxy S25 Ultra, Galaxy Z Fold7
+* **vivo:** vivo X200, vivo X200 Pro, vivo X Fold3 Pro, vivo X Fold5
+* **Xiaomi:** Xiaomi 15 Ultra, Xiaomi 15, Xiaomi 15T Pro, Xiaomi 15T, Xiaomi Pad Mini
 
 *Note: The user must have "AI Core" installed and updated via the Google Play Store.*
 

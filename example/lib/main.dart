@@ -16,9 +16,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+  String _modelVersion = 'Unknown';
   bool? _isAvailable;
   String _generatedText = '';
+  double? _executionTime;
+  bool _isGenerating = false;
   final _promptController = TextEditingController();
   final _geminiNanoAndroidPlugin = GeminiNanoAndroid();
 
@@ -30,16 +32,16 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String platformVersion;
+    String modelVersion;
     bool? isAvailable;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await _geminiNanoAndroidPlugin.getPlatformVersion() ??
-          'Unknown platform version';
+      modelVersion =
+          await _geminiNanoAndroidPlugin.getModelVersion() ??
+          'Unknown model version';
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      modelVersion = 'Failed to get model version.';
     }
 
     try {
@@ -54,7 +56,7 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _platformVersion = platformVersion;
+      _modelVersion = modelVersion;
       _isAvailable = isAvailable;
     });
   }
@@ -63,21 +65,29 @@ class _MyAppState extends State<MyApp> {
     if (_promptController.text.isEmpty) return;
 
     setState(() {
-      _generatedText = 'Generating...';
+      _executionTime = null;
+      _isGenerating = true;
     });
+
+    final stopwatch = Stopwatch()..start();
 
     try {
       final result = await _geminiNanoAndroidPlugin.generate(
         _promptController.text,
       );
+      stopwatch.stop();
       if (!mounted) return;
       setState(() {
         _generatedText = result;
+        _executionTime = stopwatch.elapsedMilliseconds / 1000.0;
+        _isGenerating = false;
       });
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _generatedText = 'Error: $e';
+        _executionTime = null;
+        _isGenerating = false;
       });
     }
   }
@@ -87,39 +97,65 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Gemini Nano Example')),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text('Running on: $_platformVersion'),
-              const SizedBox(height: 8),
-              Text('Gemini Nano Available: ${_isAvailable ?? "Checking..."}'),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _promptController,
-                decoration: const InputDecoration(
-                  labelText: 'Enter prompt',
-                  border: OutlineInputBorder(),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 16,
+              children: [
+                Text('Model version: $_modelVersion'),
+                Text.rich(
+                  TextSpan(
+                    text: 'Gemini Nano Available: ',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    children: [
+                      TextSpan(
+                        text: _isAvailable == true
+                            ? 'AVAILABLE'
+                            : 'UNAVAILABLE',
+                        style: TextStyle(
+                          color: _isAvailable == true
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: _isAvailable == true ? _generateText : null,
-                child: const Text('Generate'),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Result:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: SingleChildScrollView(child: Text(_generatedText)),
-              ),
-            ],
+                TextField(
+                  controller: _promptController,
+                  decoration: const InputDecoration(
+                    labelText: 'Enter prompt',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+                ElevatedButton(
+                  onPressed: _isAvailable == true && !_isGenerating
+                      ? _generateText
+                      : null,
+                  child: Text(_isGenerating ? 'Generating...' : 'Generate'),
+                ),
+                if (_executionTime != null) ...[
+                  Text(
+                    'Execution time: ${_executionTime!.toStringAsFixed(2)}s',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+                if (_generatedText.isNotEmpty && !_isGenerating) ...[
+                  const Text(
+                    'GENERATED TEXT',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(child: Text(_generatedText)),
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
       ),
