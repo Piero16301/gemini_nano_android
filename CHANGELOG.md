@@ -1,3 +1,10 @@
+## 0.1.0
+
+* **Breaking Change:** The `generate` method now returns `Future<List<String>>` instead of `Future<String>` to support multiple candidate responses.
+* Added optional generation parameters to `generate`: `temperature`, `seed`, `topK`, `candidateCount`, and `maxOutputTokens`.
+* Updated example app to support configuring generation parameters.
+* Documentation updates.
+
 ## 0.0.2
 
 * Migrated from `com.google.ai.edge.aicore` to `com.google.mlkit:genai-prompt` API (v1.0.0-beta1).

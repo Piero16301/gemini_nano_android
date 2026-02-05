@@ -18,16 +18,33 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _modelVersion = 'Unknown';
   bool? _isAvailable;
-  String _generatedText = '';
+  List<String> _generatedResults = [];
   double? _executionTime;
   bool _isGenerating = false;
   final _promptController = TextEditingController();
   final _geminiNanoAndroidPlugin = GeminiNanoAndroid();
 
+  // Configuration parameters
+  double? _temperature;
+  final _seedController = TextEditingController();
+  final _topKController = TextEditingController();
+  final _candidateCountController = TextEditingController();
+  final _maxOutputTokensController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     initPlatformState();
+  }
+
+  @override
+  void dispose() {
+    _promptController.dispose();
+    _seedController.dispose();
+    _topKController.dispose();
+    _candidateCountController.dispose();
+    _maxOutputTokensController.dispose();
+    super.dispose();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -67,25 +84,31 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _executionTime = null;
       _isGenerating = true;
+      _generatedResults = [];
     });
 
     final stopwatch = Stopwatch()..start();
 
     try {
       final result = await _geminiNanoAndroidPlugin.generate(
-        _promptController.text,
+        prompt: _promptController.text,
+        temperature: _temperature,
+        seed: int.tryParse(_seedController.text),
+        topK: int.tryParse(_topKController.text),
+        candidateCount: int.tryParse(_candidateCountController.text),
+        maxOutputTokens: int.tryParse(_maxOutputTokensController.text),
       );
       stopwatch.stop();
       if (!mounted) return;
       setState(() {
-        _generatedText = result;
+        _generatedResults = result;
         _executionTime = stopwatch.elapsedMilliseconds / 1000.0;
         _isGenerating = false;
       });
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _generatedText = 'Error: $e';
+        _generatedResults = ['Error: $e'];
         _executionTime = null;
         _isGenerating = false;
       });
@@ -105,55 +128,190 @@ class _MyAppState extends State<MyApp> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 16,
               children: [
-                Text('Model version: $_modelVersion'),
-                Text.rich(
-                  TextSpan(
-                    text: 'Gemini Nano Available: ',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                    children: [
-                      TextSpan(
-                        text: _isAvailable == true
-                            ? 'AVAILABLE'
-                            : 'UNAVAILABLE',
-                        style: TextStyle(
-                          color: _isAvailable == true
-                              ? Colors.green
-                              : Colors.red,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 16,
+                      children: [
+                        Text('Model version: $_modelVersion'),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Gemini Nano Available: ',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            children: [
+                              TextSpan(
+                                text: _isAvailable == true
+                                    ? 'AVAILABLE'
+                                    : 'UNAVAILABLE',
+                                style: TextStyle(
+                                  color: _isAvailable == true
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        TextField(
+                          controller: _promptController,
+                          decoration: const InputDecoration(
+                            labelText: 'Enter prompt',
+                            border: OutlineInputBorder(),
+                          ),
+                          maxLines: 4,
+                        ),
+                        ExpansionTile(
+                          title: const Text('Advanced Settings'),
+                          shape: const Border(),
+                          collapsedShape: const Border(),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                              ),
+                              child: Column(
+                                spacing: 16,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Text('Temperature: '),
+                                      Expanded(
+                                        child: Slider(
+                                          value: _temperature ?? 0.5,
+                                          min: 0.0,
+                                          max: 1.0,
+                                          divisions: 10,
+                                          label: (_temperature ?? 0.5)
+                                              .toString(),
+                                          onChanged: _isGenerating
+                                              ? null
+                                              : (value) {
+                                                  setState(() {
+                                                    _temperature = value;
+                                                  });
+                                                },
+                                        ),
+                                      ),
+                                      Text(
+                                        (_temperature ?? 0.5).toStringAsFixed(
+                                          1,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    spacing: 16,
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _seedController,
+                                          enabled: !_isGenerating,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Seed (Optional)',
+                                            hintText: 'Enter integer seed',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _topKController,
+                                          enabled: !_isGenerating,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Top K (Optional)',
+                                            hintText: 'Enter integer Top K',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    spacing: 16,
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _candidateCountController,
+                                          enabled: !_isGenerating,
+                                          decoration: const InputDecoration(
+                                            labelText:
+                                                'Candidate Count (Optional)',
+                                            hintText: 'Enter integer',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextField(
+                                          controller:
+                                              _maxOutputTokensController,
+                                          enabled: !_isGenerating,
+                                          decoration: const InputDecoration(
+                                            labelText:
+                                                'Max Output Tokens (Optional)',
+                                            hintText: 'Enter integer',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        ElevatedButton(
+                          onPressed: _isAvailable == true && !_isGenerating
+                              ? _generateText
+                              : null,
+                          child: Text(
+                            _isGenerating ? 'Generating...' : 'Generate',
+                          ),
+                        ),
+                        if (_executionTime != null) ...[
+                          Text(
+                            'Execution time: ${_executionTime!.toStringAsFixed(2)}s',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                        if (_generatedResults.isNotEmpty && !_isGenerating) ...[
+                          const Text(
+                            'GENERATED RESULTS',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                          ..._generatedResults.asMap().entries.map((entry) {
+                            return Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (_generatedResults.length > 1)
+                                      Text(
+                                        'Candidate ${entry.key + 1}:',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    Text(entry.value),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
+                      ],
+                    ),
                   ),
                 ),
-                TextField(
-                  controller: _promptController,
-                  decoration: const InputDecoration(
-                    labelText: 'Enter prompt',
-                    border: OutlineInputBorder(),
-                  ),
-                  maxLines: 3,
-                ),
-                ElevatedButton(
-                  onPressed: _isAvailable == true && !_isGenerating
-                      ? _generateText
-                      : null,
-                  child: Text(_isGenerating ? 'Generating...' : 'Generate'),
-                ),
-                if (_executionTime != null) ...[
-                  Text(
-                    'Execution time: ${_executionTime!.toStringAsFixed(2)}s',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-                if (_generatedText.isNotEmpty && !_isGenerating) ...[
-                  const Text(
-                    'GENERATED TEXT',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(child: Text(_generatedText)),
-                  ),
-                ],
               ],
             ),
           ),

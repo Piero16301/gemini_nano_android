@@ -34,7 +34,20 @@ class GeminiNanoAndroidPlugin : FlutterPlugin, MethodCallHandler {
             getModelVersion(result)
         } else if (call.method == "generateText") {
             val prompt = call.argument<String>("prompt") ?: ""
-            generateText(prompt, result)
+            val temperature = call.argument<Number>("temperature")?.toFloat() ?: 0.2f
+            val seed = call.argument<Int>("seed") ?: 0
+            val topK = call.argument<Int>("topK") ?: 40
+            val candidateCount = call.argument<Int>("candidateCount") ?: 1
+            val maxOutputTokens = call.argument<Int>("maxOutputTokens") ?: 256
+            generateText(
+                    inputPrompt = prompt,
+                    inputTemperature = temperature,
+                    inputSeed = seed,
+                    inputTopK = topK,
+                    inputCandidateCount = candidateCount,
+                    inputMaxOutputTokens = maxOutputTokens,
+                    result = result
+            )
         } else if (call.method == "isAvailable") {
             isAvailable(result)
         } else {
@@ -69,13 +82,21 @@ class GeminiNanoAndroidPlugin : FlutterPlugin, MethodCallHandler {
                                     status == FeatureStatus.DOWNLOADABLE
                     Handler(Looper.getMainLooper()).post { result.success(isAvailable) }
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 Handler(Looper.getMainLooper()).post { result.success(false) }
             }
         }
     }
 
-    private fun generateText(prompt: String, result: Result) {
+    private fun generateText(
+            inputPrompt: String,
+            inputTemperature: Float,
+            inputSeed: Int,
+            inputTopK: Int,
+            inputCandidateCount: Int,
+            inputMaxOutputTokens: Int,
+            result: Result
+    ) {
         executor.execute {
             try {
                 val config = GenerationConfig.builder().build()
@@ -84,17 +105,17 @@ class GeminiNanoAndroidPlugin : FlutterPlugin, MethodCallHandler {
                 runBlocking {
                     val response =
                             model.generateContent(
-                                    generateContentRequest(TextPart(prompt)) { candidateCount = 1 },
+                                    generateContentRequest(TextPart(inputPrompt)) {
+                                        temperature = inputTemperature
+                                        seed = inputSeed
+                                        topK = inputTopK
+                                        candidateCount = inputCandidateCount
+                                        maxOutputTokens = inputMaxOutputTokens
+                                    },
                             )
 
-                    var text = ""
-                    val candidates = response.candidates
-                    if (!candidates.isEmpty()) {
-                        text = candidates[0].text ?: ""
-                    }
-
-                    val finalText = text
-                    Handler(Looper.getMainLooper()).post { result.success(finalText) }
+                    val candidates = response.candidates.map { it.text }
+                    Handler(Looper.getMainLooper()).post { result.success(candidates) }
                 }
             } catch (e: Exception) {
                 Handler(Looper.getMainLooper()).post {

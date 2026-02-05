@@ -27,10 +27,22 @@ class MethodChannelGeminiNanoAndroid extends GeminiNanoAndroidPlatform {
   }
 
   @override
-  Future<String> generate(String prompt) async {
-    final String? result =
-        await methodChannel.invokeMethod<String>('generateText', {
+  Future<List<String>> generate({
+    required String prompt,
+    double? temperature,
+    int? seed,
+    int? topK,
+    int? candidateCount,
+    int? maxOutputTokens,
+  }) async {
+    final List<String>? result =
+        await methodChannel.invokeListMethod<String>('generateText', {
       'prompt': prompt,
+      'temperature': temperature,
+      'seed': seed,
+      'topK': topK,
+      'candidateCount': candidateCount,
+      'maxOutputTokens': maxOutputTokens,
     });
     if (result == null) {
       throw PlatformException(

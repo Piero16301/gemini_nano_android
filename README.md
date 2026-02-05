@@ -16,6 +16,11 @@ This package enables **offline-first**, latency-free, and privacy-centric genera
 * **Zero Latency:** No network round-trips; utilizes the on-device NPU (Pixel Tensor / Snapdragon).
 * **Cost Efficient:** Save on cloud API tokens by offloading simple tasks to the device.
 
+## 📸 Example App
+
+![Example App](screenshots/example_app.png)
+
+
 ## 📱 Supported Devices
 
 Gemini Nano via AI Core is currently available on select flagship Android devices, including but not limited to:
@@ -122,13 +127,6 @@ Future<void> processReceiptText(String ocrRawText) async {
   // Parse jsonResult...
 }
 ```
-
-## ⚠️ Troubleshooting & Limitations
-Model Not Downloaded: The first time an app requests the model, Android AI Core needs to download it (approx. 1GB+). This happens in the background. If you get a Model not found error, ensure the device is on Wi-Fi and charging, then try again later.
-
-Multimodal Support: Currently, the Android AICore implementation for 3rd party apps is primarily Text-to-Text. To process images (like PDFs or receipts), use google_mlkit_text_recognition to extract text first, then pass that text to GeminiNanoAndroid.
-
-Context Window: On-device models have smaller context windows than cloud models. Keep prompts concise.
 
 ## ⚠️ Troubleshooting & Limitations
 Model Not Downloaded: The first time an app requests the model, Android AI Core needs to download it (approx. 1GB+). This happens in the background. If you get a Model not found error, ensure the device is on Wi-Fi and charging, then try again later.

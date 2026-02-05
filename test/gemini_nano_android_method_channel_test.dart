@@ -20,7 +20,7 @@ void main() {
             return true;
           case 'generateText':
             if (methodCall.arguments['prompt'] == 'test prompt') {
-              return 'Generated text';
+              return ['Generated text'];
             }
             return null;
           default:
@@ -44,7 +44,10 @@ void main() {
   });
 
   test('generate', () async {
-    expect(await platform.generate('test prompt'), 'Generated text');
+    expect(
+      await platform.generate(prompt: 'test prompt'),
+      ['Generated text'],
+    );
   });
 
   test('isAvailable returns false on PlatformException', () async {
@@ -63,7 +66,7 @@ void main() {
     });
 
     expect(
-      () => platform.generate('prompt'),
+      () => platform.generate(prompt: 'prompt'),
       throwsA(isA<PlatformException>()),
     );
   });

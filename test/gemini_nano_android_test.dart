@@ -14,7 +14,15 @@ class MockGeminiNanoAndroidPlatform
   Future<bool> isAvailable() => Future.value(true);
 
   @override
-  Future<String> generate(String prompt) => Future.value('mocked response');
+  Future<List<String>> generate({
+    required String prompt,
+    double? temperature,
+    int? seed,
+    int? topK,
+    int? candidateCount,
+    int? maxOutputTokens,
+  }) =>
+      Future.value(['mocked response']);
 }
 
 void main() {
@@ -49,6 +57,9 @@ void main() {
         MockGeminiNanoAndroidPlatform();
     GeminiNanoAndroidPlatform.instance = fakePlatform;
 
-    expect(await geminiNanoAndroid.generate('prompt'), 'mocked response');
+    expect(
+      await geminiNanoAndroid.generate(prompt: 'prompt'),
+      ['mocked response'],
+    );
   });
 }

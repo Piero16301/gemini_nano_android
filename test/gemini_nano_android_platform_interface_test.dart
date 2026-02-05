@@ -25,7 +25,7 @@ void main() {
     test('default implementation of generate throws UnimplementedError', () {
       final platform = MockGeminiNanoAndroidPlatform();
       expect(
-        () => platform.generate('prompt'),
+        () => platform.generate(prompt: 'prompt'),
         throwsUnimplementedError,
       );
     });

@@ -40,8 +40,15 @@ abstract class GeminiNanoAndroidPlatform extends PlatformInterface {
     throw UnimplementedError('isAvailable() has not been implemented.');
   }
 
-  /// Generates text based on a prompt using the on-device model.
-  Future<String> generate(String prompt) {
+  /// Generates a list of strings based on a prompt using the on-device model.
+  Future<List<String>> generate({
+    required String prompt,
+    double? temperature,
+    int? seed,
+    int? topK,
+    int? candidateCount,
+    int? maxOutputTokens,
+  }) {
     throw UnimplementedError('generate() has not been implemented.');
   }
 }
