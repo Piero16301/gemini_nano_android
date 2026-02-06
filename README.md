@@ -4,6 +4,7 @@
 [![analysis](https://github.com/Piero16301/gemini_nano_android/actions/workflows/code-analysis.yml/badge.svg)](https://github.com/Piero16301/gemini_nano_android/actions)
 [![Star on Github](https://img.shields.io/github/stars/Piero16301/gemini_nano_android.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/Piero16301/gemini_nano_android)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/sanjuanpamk)
 
 A Flutter plugin to access **Gemini Nano**, Google's most efficient on-device AI model, directly through Android AI Core
 
@@ -67,13 +68,18 @@ The simplest way to generate text.
 import 'package:gemini_nano_android/gemini_nano_android.dart';
 
 void generateText() async {
+  final gemini = GeminiNanoAndroid();
   try {
     // Check if the device supports Gemini Nano
-    bool isAvailable = await GeminiNanoAndroid.isAvailable();
+    bool isAvailable = await gemini.isAvailable();
     
     if (isAvailable) {
-      String result = await GeminiNanoAndroid.generate("Explain quantum physics in 10 words.");
-      print("Gemini Nano says: $result");
+      List<String> results = await gemini.generate(
+        prompt: "Explain quantum physics in 10 words.",
+        temperature: 0.7, // Optional: Control creativity
+        candidateCount: 1, // Optional: Number of responses
+      );
+      print("Gemini Nano says: ${results.first}");
     } else {
       print("Gemini Nano is not supported or not installed on this device.");
     }
@@ -90,15 +96,15 @@ This example attempts to use Gemini Nano first (Free/Fast), and falls back to Fi
 
 ```dart
 import 'package:gemini_nano_android/gemini_nano_android.dart';
-// import 'package:firebase_vertexai/firebase_vertexai.dart'; // Uncomment if using Firebase
+// import 'package:firebase_ai/firebase_ai.dart'; // Uncomment if using Firebase
 
 Future<String> smartProcess(String prompt) async {
   try {
     // 1. Try On-Device (Fast, Free, Private)
     print("Attempting local inference...");
-    final result = await GeminiNanoAndroid.generate(prompt);
-    return result;
-    
+    final gemini = GeminiNanoAndroid();
+    final results = await gemini.generate(prompt: prompt);
+    return results.first;
   } catch (e) {
     // 2. Fallback to Cloud (More powerful, costs money, requires internet)
     print("Local inference failed ($e). Switching to Cloud...");
@@ -123,7 +129,9 @@ Future<void> processReceiptText(String ocrRawText) async {
     Text: $ocrRawText
   """;
 
-  final jsonResult = await GeminiNanoAndroid.generate(prompt);
+  final gemini = GeminiNanoAndroid();
+  final results = await gemini.generate(prompt: prompt);
+  final jsonResult = results.first;
   // Parse jsonResult...
 }
 ```
