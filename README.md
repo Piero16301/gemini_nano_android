@@ -2,6 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/gemini_nano_android.svg)](https://pub.dev/packages/gemini_nano_android)
 [![analysis](https://github.com/Piero16301/gemini_nano_android/actions/workflows/code-analysis.yml/badge.svg)](https://github.com/Piero16301/gemini_nano_android/actions)
+[![codecov](https://codecov.io/gh/Piero16301/gemini_nano_android/graph/badge.svg)](https://codecov.io/gh/Piero16301/gemini_nano_android)
 [![Star on Github](https://img.shields.io/github/stars/Piero16301/gemini_nano_android.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/Piero16301/gemini_nano_android)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/sanjuanpamk)

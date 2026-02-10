@@ -1,3 +1,8 @@
+## 0.1.1
+
+* Added code coverage (Codecov) badge to README.
+* Added GitHub Actions workflow for automated test coverage reporting.
+
 ## 0.1.0
 
 * **Breaking Change:** The `generate` method now returns `Future<List<String>>` instead of `Future<String>` to support multiple candidate responses.
