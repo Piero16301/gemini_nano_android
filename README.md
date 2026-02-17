@@ -51,7 +51,7 @@ Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  gemini_nano_android: ^1.0.0
+  gemini_nano_android: ^1.0.1
 ```
 
 ## ⚙️ Android Configuration
@@ -92,8 +92,6 @@ void generateText() async {
     print("Error generating text: $e");
   }
 }
-```
-
 ```
 
 ### 2. Multimodal (Image + Text) Generation

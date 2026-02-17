@@ -1,3 +1,7 @@
+## 1.0.1
+
+* **Fix:** Fixed the documentation and use of multimodal generation.
+
 ## 1.0.0
 
 * **Feature:** Added support for **Multimodal Input (Text + Image)**. The `generate` method now accepts an optional `image` parameter (`Uint8List`).
