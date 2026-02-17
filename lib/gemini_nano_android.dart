@@ -31,18 +31,21 @@ class GeminiNanoAndroid {
   ///
   /// [prompt]: The input text to generate content from.
   ///
-  /// [temperature]: Controls the randomness of the output. 0.0 - 1.0 (0.0 is default)
+  /// [image]: (Optional) The input image to generate content from.
   ///
-  /// [seed]: The seed for the random number generator. 0 - n (0 is default)
+  /// [temperature]: (Optional) Controls the randomness of the output. 0.0 - 1.0 (0.0 is default)
   ///
-  /// [topK]: The number of most likely tokens to consider at each step. 1 - 40 (3 is default)
+  /// [seed]: (Optional) The seed for the random number generator. 0 - n (0 is default)
   ///
-  /// [candidateCount]: The number of candidate responses to generate. 1 - 8 (1 is default)
+  /// [topK]: (Optional) The number of most likely tokens to consider at each step. 1 - 40 (3 is default)
   ///
-  /// [maxOutputTokens]: The maximum number of tokens to generate. 1 - 256 (256 is default)
+  /// [candidateCount]: (Optional) The number of candidate responses to generate. 1 - 8 (1 is default)
+  ///
+  /// [maxOutputTokens]: (Optional) The maximum number of tokens to generate. 1 - 256 (256 is default)
   Future<List<String>> generate({
     required String prompt,
-    double temperature = 0,
+    Uint8List? image,
+    double temperature = 0.2,
     int seed = 0,
     int topK = 3,
     int candidateCount = 1,
@@ -50,6 +53,7 @@ class GeminiNanoAndroid {
   }) {
     return GeminiNanoAndroidPlatform.instance.generate(
       prompt: prompt,
+      image: image,
       temperature: temperature,
       seed: seed,
       topK: topK,

@@ -35,7 +35,8 @@ class MethodChannelGeminiNanoAndroid extends GeminiNanoAndroidPlatform {
   @override
   Future<List<String>> generate({
     required String prompt,
-    double temperature = 0,
+    Uint8List? image,
+    double temperature = 0.2,
     int seed = 0,
     int topK = 3,
     int candidateCount = 1,
@@ -44,6 +45,7 @@ class MethodChannelGeminiNanoAndroid extends GeminiNanoAndroidPlatform {
     final List<String>? result =
         await methodChannel.invokeListMethod<String>('generateText', {
       'prompt': prompt,
+      'image': image,
       'temperature': temperature,
       'seed': seed,
       'topK': topK,

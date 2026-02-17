@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:gemini_nano_android/gemini_nano_android.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,9 +25,11 @@ class _MyAppState extends State<MyApp> {
   bool _isGenerating = false;
   final _promptController = TextEditingController();
   final _geminiNanoAndroidPlugin = GeminiNanoAndroid();
+  Uint8List? _selectedImage;
+  final ImagePicker _picker = ImagePicker();
 
   // Configuration parameters
-  double _temperature = 0;
+  double _temperature = 0.2;
   final _seedController = TextEditingController();
   final _topKController = TextEditingController();
   final _candidateCountController = TextEditingController();
@@ -93,6 +96,7 @@ class _MyAppState extends State<MyApp> {
     try {
       final result = await _geminiNanoAndroidPlugin.generate(
         prompt: _promptController.text,
+        image: _selectedImage,
         temperature: _temperature,
         seed: int.tryParse(_seedController.text) ?? 0,
         topK: int.tryParse(_topKController.text) ?? 3,
@@ -135,25 +139,7 @@ class _MyAppState extends State<MyApp> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       spacing: 16,
                       children: [
-                        Text('Model version: $_modelVersion'),
-                        Text.rich(
-                          TextSpan(
-                            text: 'Gemini Nano Available: ',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                            children: [
-                              TextSpan(
-                                text: _isAvailable == true
-                                    ? 'AVAILABLE'
-                                    : 'UNAVAILABLE',
-                                style: TextStyle(
-                                  color: _isAvailable == true
-                                      ? Colors.green
-                                      : Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        ..._buildModelDetails(),
                         TextField(
                           controller: _promptController,
                           decoration: const InputDecoration(
@@ -162,106 +148,8 @@ class _MyAppState extends State<MyApp> {
                           ),
                           maxLines: 4,
                         ),
-                        ExpansionTile(
-                          title: const Text('Advanced Settings'),
-                          shape: const Border(),
-                          collapsedShape: const Border(),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                              ),
-                              child: Column(
-                                spacing: 16,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Text('Temperature: '),
-                                      Expanded(
-                                        child: Slider(
-                                          value: _temperature,
-                                          min: 0.0,
-                                          max: 1.0,
-                                          divisions: 10,
-                                          label: (_temperature).toString(),
-                                          onChanged: _isGenerating
-                                              ? null
-                                              : (value) {
-                                                  setState(() {
-                                                    _temperature = value;
-                                                  });
-                                                },
-                                        ),
-                                      ),
-                                      Text((_temperature).toStringAsFixed(1)),
-                                    ],
-                                  ),
-                                  Row(
-                                    spacing: 16,
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          controller: _seedController,
-                                          enabled: !_isGenerating,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Seed (Optional)',
-                                            hintText: 'Enter integer seed',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          keyboardType: TextInputType.number,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: TextField(
-                                          controller: _topKController,
-                                          enabled: !_isGenerating,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Top K (Optional)',
-                                            hintText: 'Enter integer Top K',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          keyboardType: TextInputType.number,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    spacing: 16,
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          controller: _candidateCountController,
-                                          enabled: !_isGenerating,
-                                          decoration: const InputDecoration(
-                                            labelText:
-                                                'Candidate Count (Optional)',
-                                            hintText: 'Enter integer',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          keyboardType: TextInputType.number,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: TextField(
-                                          controller:
-                                              _maxOutputTokensController,
-                                          enabled: !_isGenerating,
-                                          decoration: const InputDecoration(
-                                            labelText:
-                                                'Max Output Tokens (Optional)',
-                                            hintText: 'Enter integer',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          keyboardType: TextInputType.number,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                        ..._buildImagePicker(),
+                        _buildModelSettings(),
                         ElevatedButton(
                           onPressed: _isAvailable == true && !_isGenerating
                               ? _generateText
@@ -270,40 +158,7 @@ class _MyAppState extends State<MyApp> {
                             _isGenerating ? 'Generating...' : 'Generate',
                           ),
                         ),
-                        if (_executionTime != null) ...[
-                          Text(
-                            'Execution time: ${_executionTime!.toStringAsFixed(2)}s',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                        if (_generatedResults.isNotEmpty && !_isGenerating) ...[
-                          const Text(
-                            'GENERATED RESULTS',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                          ..._generatedResults.asMap().entries.map((entry) {
-                            return Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (_generatedResults.length > 1)
-                                      Text(
-                                        'Candidate ${entry.key + 1}:',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    MarkdownBody(data: entry.value),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }),
-                        ],
+                        ..._buildModelResponse(),
                       ],
                     ),
                   ),
@@ -314,5 +169,219 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildModelDetails() {
+    return [
+      Text('Model version: $_modelVersion'),
+      Text.rich(
+        TextSpan(
+          text: 'Gemini Nano Available: ',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+          children: [
+            TextSpan(
+              text: _isAvailable == true ? 'AVAILABLE' : 'UNAVAILABLE',
+              style: TextStyle(
+                color: _isAvailable == true ? Colors.green : Colors.red,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _buildImagePicker() {
+    if (_selectedImage != null) {
+      return [
+        Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.memory(
+                _selectedImage!,
+                height: 150,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned(
+              right: 0,
+              child: IconButton(
+                icon: const Icon(Icons.close, fontWeight: FontWeight.bold),
+                onPressed: () {
+                  setState(() {
+                    _selectedImage = null;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ];
+    } else {
+      return [
+        ElevatedButton.icon(
+          onPressed: _isGenerating ? null : _pickImage,
+          icon: const Icon(Icons.image),
+          label: const Text('Pick Image (Optional)'),
+        ),
+      ];
+    }
+  }
+
+  Widget _buildModelSettings() {
+    return ExpansionTile(
+      title: const Text('Advanced Settings'),
+      shape: const Border(),
+      collapsedShape: const Border(),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            spacing: 16,
+            children: [
+              Row(
+                children: [
+                  const Text('Temperature: '),
+                  Expanded(
+                    child: Slider(
+                      value: _temperature,
+                      min: 0.0,
+                      max: 1.0,
+                      divisions: 10,
+                      label: (_temperature).toString(),
+                      onChanged: _isGenerating
+                          ? null
+                          : (value) {
+                              setState(() {
+                                _temperature = value;
+                              });
+                            },
+                    ),
+                  ),
+                  Text((_temperature).toStringAsFixed(1)),
+                ],
+              ),
+              Row(
+                spacing: 16,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _seedController,
+                      enabled: !_isGenerating,
+                      decoration: const InputDecoration(
+                        labelText: 'Seed (Optional)',
+                        hintText: 'Enter integer seed',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _topKController,
+                      enabled: !_isGenerating,
+                      decoration: const InputDecoration(
+                        labelText: 'Top K (Optional)',
+                        hintText: 'Enter integer Top K',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                spacing: 16,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _candidateCountController,
+                      enabled: !_isGenerating,
+                      decoration: const InputDecoration(
+                        labelText: 'Candidate Count (Optional)',
+                        hintText: 'Enter integer',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _maxOutputTokensController,
+                      enabled: !_isGenerating,
+                      decoration: const InputDecoration(
+                        labelText: 'Max Output Tokens (Optional)',
+                        hintText: 'Enter integer',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _buildModelResponse() {
+    final List<Widget> widgets = [];
+
+    if (_executionTime != null) {
+      widgets.add(
+        Text(
+          'Execution time: ${_executionTime!.toStringAsFixed(2)}s',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+
+    if (_generatedResults.isNotEmpty && !_isGenerating) {
+      widgets.add(
+        const Text(
+          'GENERATED RESULTS',
+          style: TextStyle(fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
+      );
+      widgets.addAll(
+        _generatedResults.asMap().entries.map((entry) {
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_generatedResults.length > 1)
+                    Text(
+                      'Candidate ${entry.key + 1}:',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  MarkdownBody(data: entry.value),
+                ],
+              ),
+            ),
+          );
+        }),
+      );
+    }
+    return widgets;
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      final bytes = await image.readAsBytes();
+      setState(() {
+        _selectedImage = bytes;
+      });
+    }
   }
 }

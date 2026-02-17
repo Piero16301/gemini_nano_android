@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gemini_nano_android/gemini_nano_android.dart';
 import 'package:gemini_nano_android/gemini_nano_android_platform_interface.dart';
@@ -16,6 +18,7 @@ class MockGeminiNanoAndroidPlatform
   @override
   Future<List<String>> generate({
     required String prompt,
+    Uint8List? image,
     double? temperature,
     int? seed,
     int? topK,

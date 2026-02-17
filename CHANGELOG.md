@@ -1,3 +1,9 @@
+## 1.0.0
+
+* **Feature:** Added support for **Multimodal Input (Text + Image)**. The `generate` method now accepts an optional `image` parameter (`Uint8List`).
+* Updated Android implementation to handle image decoding and processing via `BitmapFactory`.
+* Updated example app with an Image Picker to demonstrate multimodal capabilities.
+
 ## 0.1.3
 
 * Updated `generate` method parameters to be non-nullable with default values.

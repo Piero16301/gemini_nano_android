@@ -21,9 +21,9 @@ This package enables **offline-first**, latency-free, and privacy-centric genera
 ## 📸 Example App
 
 
-| <img src="screenshots/example_app_unavailable.png" width="250" height="550" /> | <img src="screenshots/example_app_small_response.png" width="250" height="550" /> | <img src="screenshots/example_app_multiple_responses_markdown.png" width="250" height="550" /> |
+| <img src="screenshots/example_app_small_response.png" width="250" height="550" /> | <img src="screenshots/example_app_multiple_responses_markdown.png" width="250" height="550" /> | <img src="screenshots/example_app_image_input.png" width="250" height="550" /> |
 |:---:|:---:|:---:|
-| **Unavailable State** | **Simple Response** | **Markdown Response** |
+| **Simple Response** | **Markdown Response** | **Image Input** |
 
 
 
@@ -51,7 +51,7 @@ Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  gemini_nano_android: ^0.1.3
+  gemini_nano_android: ^1.0.0
 ```
 
 ## ⚙️ Android Configuration
@@ -94,7 +94,31 @@ void generateText() async {
 }
 ```
 
-### 2. The "Hybrid Cloud-Fallback" Pattern (Recommended)
+```
+
+### 2. Multimodal (Image + Text) Generation
+You can pass an image (as `Uint8List`) along with a prompt to perform multimodal tasks.
+
+```dart
+import 'package:gemini_nano_android/gemini_nano_android.dart';
+import 'package:flutter/services.dart';
+
+void generateWithImage(Uint8List imageBytes) async {
+  final gemini = GeminiNanoAndroid();
+  try {
+    final results = await gemini.generate(
+      prompt: "Describe this image in detail.",
+      image: imageBytes, // Pass the image bytes here
+      temperature: 0.4,
+    );
+    print("Image description: ${results.first}");
+  } catch (e) {
+    print("Error: $e");
+  }
+}
+```
+
+### 3. The "Hybrid Cloud-Fallback" Pattern (Recommended)
 Since on-device models have limitations (context size, multimodal capabilities) or might not be downloaded yet, it is best practice to use a fallback strategy.
 
 This example attempts to use Gemini Nano first (Free/Fast), and falls back to Firebase Vertex AI (Cloud) if it fails.
@@ -123,7 +147,7 @@ Future<String> smartProcess(String prompt) async {
 }
 ```
 
-### 3. Structured Output (JSON) for Receipt Processing
+### 4. Structured Output (JSON) for Receipt Processing
 Gemini Nano is great at cleaning up OCR text.
 
 ```dart
@@ -144,7 +168,7 @@ Future<void> processReceiptText(String ocrRawText) async {
 ## ⚠️ Troubleshooting & Limitations
 Model Not Downloaded: The first time an app requests the model, Android AI Core needs to download it (approx. 1GB+). This happens in the background. If you get a Model not found error, ensure the device is on Wi-Fi and charging, then try again later.
 
-Multimodal Support: Currently, the Android AICore implementation for 3rd party apps is primarily Text-to-Text. To process images (like PDFs or receipts), use google_mlkit_text_recognition to extract text first, then pass that text to GeminiNanoAndroid.
+Multimodal Support: The plugin now supports image input for multimodal generation. Ensure you pass a valid `Uint8List` image. Note that processing large images may take slightly longer.
 
 Context Window: On-device models have smaller context windows than cloud models. Keep prompts concise.
 

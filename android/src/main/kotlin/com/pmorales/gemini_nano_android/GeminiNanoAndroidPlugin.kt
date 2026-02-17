@@ -2,6 +2,8 @@ package com.pmorales.gemini_nano_android
 
 // Using simple imports or fully qualified if needed to avoid conflicts
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.NonNull
@@ -34,13 +36,21 @@ class GeminiNanoAndroidPlugin : FlutterPlugin, MethodCallHandler {
             getModelVersion(result)
         } else if (call.method == "generateText") {
             val prompt = call.argument<String>("prompt") ?: ""
-            val temperature = call.argument<Number>("temperature")?.toFloat() ?: 0.0f
+            val imageBytes = call.argument<ByteArray>("image")
+            val bitmap =
+                    if (imageBytes != null) {
+                        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                    } else {
+                        null
+                    }
+            val temperature = call.argument<Number>("temperature")?.toFloat() ?: 0.2f
             val seed = call.argument<Int>("seed") ?: 0
             val topK = call.argument<Int>("topK") ?: 3
             val candidateCount = call.argument<Int>("candidateCount") ?: 1
             val maxOutputTokens = call.argument<Int>("maxOutputTokens") ?: 256
             generateText(
                     inputPrompt = prompt,
+                    inputBitmap = bitmap,
                     inputTemperature = temperature,
                     inputSeed = seed,
                     inputTopK = topK,
@@ -90,6 +100,7 @@ class GeminiNanoAndroidPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun generateText(
             inputPrompt: String,
+            inputBitmap: Bitmap?,
             inputTemperature: Float,
             inputSeed: Int,
             inputTopK: Int,
@@ -103,16 +114,28 @@ class GeminiNanoAndroidPlugin : FlutterPlugin, MethodCallHandler {
                 val model = Generation.getClient(config)
 
                 runBlocking {
-                    val response =
-                            model.generateContent(
-                                    generateContentRequest(TextPart(inputPrompt)) {
-                                        temperature = inputTemperature
-                                        seed = inputSeed
-                                        topK = inputTopK
-                                        candidateCount = inputCandidateCount
-                                        maxOutputTokens = inputMaxOutputTokens
-                                    },
-                            )
+                    val request =
+                            if (inputBitmap != null) {
+                                generateContentRequest(
+                                        ImagePart(inputBitmap),
+                                        TextPart(inputPrompt)
+                                ) {
+                                    temperature = inputTemperature
+                                    seed = inputSeed
+                                    topK = inputTopK
+                                    candidateCount = inputCandidateCount
+                                    maxOutputTokens = inputMaxOutputTokens
+                                }
+                            } else {
+                                generateContentRequest(TextPart(inputPrompt)) {
+                                    temperature = inputTemperature
+                                    seed = inputSeed
+                                    topK = inputTopK
+                                    candidateCount = inputCandidateCount
+                                    maxOutputTokens = inputMaxOutputTokens
+                                }
+                            }
+                    val response = model.generateContent(request)
 
                     val candidates = response.candidates.map { it.text }
                     Handler(Looper.getMainLooper()).post { result.success(candidates) }

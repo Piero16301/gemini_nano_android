@@ -1,6 +1,8 @@
 /// The platform interface for the Gemini Nano Android plugin.
 library;
 
+import 'dart:typed_data';
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'gemini_nano_android_method_channel.dart';
@@ -43,10 +45,11 @@ abstract class GeminiNanoAndroidPlatform extends PlatformInterface {
     throw UnimplementedError('isAvailable() has not been implemented.');
   }
 
-  /// Generates a list of strings based on a prompt using the on-device model.
+  /// Generates a list of strings based on a prompt and optional image using the on-device model.
   Future<List<String>> generate({
     required String prompt,
-    double temperature = 0,
+    Uint8List? image,
+    double temperature = 0.2,
     int seed = 0,
     int topK = 3,
     int candidateCount = 1,
