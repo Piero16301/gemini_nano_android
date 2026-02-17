@@ -1,3 +1,8 @@
+## 0.1.2
+
+* Updated README documentation with screenshot table.
+* Updated example app to support Markdown rendering.
+
 ## 0.1.1
 
 * Added code coverage (Codecov) badge to README.

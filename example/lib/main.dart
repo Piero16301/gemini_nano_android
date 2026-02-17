@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:gemini_nano_android/gemini_nano_android.dart';
 
 void main() {
@@ -301,7 +302,7 @@ class _MyAppState extends State<MyApp> {
                                           color: Colors.grey,
                                         ),
                                       ),
-                                    Text(entry.value),
+                                    MarkdownBody(data: entry.value),
                                   ],
                                 ),
                               ),

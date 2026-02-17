@@ -11,6 +11,7 @@ dependencies:
   gemini_nano_android:
     path: ../
   cupertino_icons: ^1.0.8
+  flutter_markdown_plus: ^1.0.7
 
 dev_dependencies:
   integration_test:

@@ -20,7 +20,11 @@ This package enables **offline-first**, latency-free, and privacy-centric genera
 
 ## 📸 Example App
 
-![Example App](screenshots/example_app.png)
+
+| <img src="screenshots/example_app_unavailable.png" width="250" height="550" /> | <img src="screenshots/example_app_small_response.png" width="250" height="550" /> | <img src="screenshots/example_app_multiple_responses_markdown.png" width="250" height="550" /> |
+|:---:|:---:|:---:|
+| **Unavailable State** | **Simple Response** | **Markdown Response** |
+
 
 
 ## 📱 Supported Devices
