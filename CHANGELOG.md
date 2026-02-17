@@ -1,3 +1,9 @@
+## 0.1.3
+
+* Updated `generate` method parameters to be non-nullable with default values.
+* Adjusted default values for `temperature`, `topK`, `candidateCount`, and `maxOutputTokens`.
+* Added documentation comments to the public API.
+
 ## 0.1.2
 
 * Updated README documentation with screenshot table.

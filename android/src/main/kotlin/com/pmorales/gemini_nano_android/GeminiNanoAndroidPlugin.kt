@@ -34,9 +34,9 @@ class GeminiNanoAndroidPlugin : FlutterPlugin, MethodCallHandler {
             getModelVersion(result)
         } else if (call.method == "generateText") {
             val prompt = call.argument<String>("prompt") ?: ""
-            val temperature = call.argument<Number>("temperature")?.toFloat() ?: 0.2f
+            val temperature = call.argument<Number>("temperature")?.toFloat() ?: 0.0f
             val seed = call.argument<Int>("seed") ?: 0
-            val topK = call.argument<Int>("topK") ?: 40
+            val topK = call.argument<Int>("topK") ?: 3
             val candidateCount = call.argument<Int>("candidateCount") ?: 1
             val maxOutputTokens = call.argument<Int>("maxOutputTokens") ?: 256
             generateText(

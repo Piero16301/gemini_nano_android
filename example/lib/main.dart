@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
   final _geminiNanoAndroidPlugin = GeminiNanoAndroid();
 
   // Configuration parameters
-  double? _temperature;
+  double _temperature = 0;
   final _seedController = TextEditingController();
   final _topKController = TextEditingController();
   final _candidateCountController = TextEditingController();
@@ -94,10 +94,10 @@ class _MyAppState extends State<MyApp> {
       final result = await _geminiNanoAndroidPlugin.generate(
         prompt: _promptController.text,
         temperature: _temperature,
-        seed: int.tryParse(_seedController.text),
-        topK: int.tryParse(_topKController.text),
-        candidateCount: int.tryParse(_candidateCountController.text),
-        maxOutputTokens: int.tryParse(_maxOutputTokensController.text),
+        seed: int.tryParse(_seedController.text) ?? 0,
+        topK: int.tryParse(_topKController.text) ?? 3,
+        candidateCount: int.tryParse(_candidateCountController.text) ?? 1,
+        maxOutputTokens: int.tryParse(_maxOutputTokensController.text) ?? 256,
       );
       stopwatch.stop();
       if (!mounted) return;
@@ -179,12 +179,11 @@ class _MyAppState extends State<MyApp> {
                                       const Text('Temperature: '),
                                       Expanded(
                                         child: Slider(
-                                          value: _temperature ?? 0.5,
+                                          value: _temperature,
                                           min: 0.0,
                                           max: 1.0,
                                           divisions: 10,
-                                          label: (_temperature ?? 0.5)
-                                              .toString(),
+                                          label: (_temperature).toString(),
                                           onChanged: _isGenerating
                                               ? null
                                               : (value) {
@@ -194,11 +193,7 @@ class _MyAppState extends State<MyApp> {
                                                 },
                                         ),
                                       ),
-                                      Text(
-                                        (_temperature ?? 0.5).toStringAsFixed(
-                                          1,
-                                        ),
-                                      ),
+                                      Text((_temperature).toStringAsFixed(1)),
                                     ],
                                   ),
                                   Row(

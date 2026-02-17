@@ -1,3 +1,6 @@
+/// The method channel implementation of the Gemini Nano Android plugin.
+library;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -5,6 +8,9 @@ import 'gemini_nano_android_platform_interface.dart';
 
 /// An implementation of [GeminiNanoAndroidPlatform] that uses method channels.
 class MethodChannelGeminiNanoAndroid extends GeminiNanoAndroidPlatform {
+  /// Creates a new instance of [MethodChannelGeminiNanoAndroid].
+  MethodChannelGeminiNanoAndroid();
+
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('gemini_nano_android');
@@ -29,11 +35,11 @@ class MethodChannelGeminiNanoAndroid extends GeminiNanoAndroidPlatform {
   @override
   Future<List<String>> generate({
     required String prompt,
-    double? temperature,
-    int? seed,
-    int? topK,
-    int? candidateCount,
-    int? maxOutputTokens,
+    double temperature = 0,
+    int seed = 0,
+    int topK = 3,
+    int candidateCount = 1,
+    int maxOutputTokens = 256,
   }) async {
     final List<String>? result =
         await methodChannel.invokeListMethod<String>('generateText', {
