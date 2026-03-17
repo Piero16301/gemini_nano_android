@@ -1,3 +1,9 @@
+## 1.1.1
+
+* **Feat:** Added support for Swift Package Manager (SPM) for iOS to comply with pub.dev requirements.
+* **Fix:** Updated iOS deployment target to 15.0.
+* **Note:** Updated author contact information and enabled the iOS Privacy Manifest.
+
 ## 1.1.0
 
 * **Feat:** Added initial support for iOS platform.
