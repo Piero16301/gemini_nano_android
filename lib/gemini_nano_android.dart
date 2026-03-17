@@ -4,6 +4,7 @@ library;
 import 'package:flutter/services.dart';
 
 import 'gemini_nano_android_platform_interface.dart';
+export 'gemini_nano_ios.dart';
 
 /// A Flutter plugin for accessing the Gemini Nano model on Android devices.
 ///

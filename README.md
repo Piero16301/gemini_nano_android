@@ -51,7 +51,7 @@ Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  gemini_nano_android: ^1.0.1
+  gemini_nano_android: ^1.1.0
 ```
 
 ## ⚙️ Android Configuration

@@ -1,6 +1,6 @@
 name: gemini_nano_android
 description: A Flutter plugin to access on-device Gemini Nano models via Android AI Core. Enables offline inference and privacy-first text generation.
-version: 1.0.1
+version: 1.1.0
 homepage: https://github.com/Piero16301/gemini_nano_android
 
 environment:
@@ -23,6 +23,8 @@ flutter:
       android:
         package: com.pmorales.gemini_nano_android
         pluginClass: GeminiNanoAndroidPlugin
+      ios:
+        dartPluginClass: GeminiNanoIos
 
 topics:
   - ai

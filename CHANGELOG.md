@@ -1,3 +1,9 @@
+## 1.1.0
+
+* **Feat:** Added initial support for iOS platform.
+* **Feat:** Added iOS support for the example project.
+* **Note:** iOS functions currently return default values (`getModelVersion` => null, `isAvailable` => false, `generate` => []).
+
 ## 1.0.1
 
 * **Fix:** Fixed the documentation and use of multimodal generation.
