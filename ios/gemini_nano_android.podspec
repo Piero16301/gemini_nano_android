@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gemini_nano_android'
-  s.version          = '1.1.1'
+  s.version          = '1.1.2'
   s.summary          = 'A Flutter plugin to access on-device Gemini Nano models via Android AI Core.'
   s.description      = <<-DESC
 A Flutter plugin to access on-device Gemini Nano models via Android AI Core. Enables offline inference and privacy-first text generation.
@@ -13,7 +13,7 @@ A Flutter plugin to access on-device Gemini Nano models via Android AI Core. Ena
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Piero Morales' => 'sanjuan.pama@gmail.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'gemini_nano_android/Classes/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '15.0'
 
@@ -25,5 +25,5 @@ A Flutter plugin to access on-device Gemini Nano models via Android AI Core. Ena
   # required reason APIs, update the PrivacyInfo.xcprivacy file to describe your
   # plugin's privacy impact, and then uncomment this line. For more information,
   # see https://developer.apple.com/documentation/bundleresources/privacy_manifest_files
-  s.resource_bundles = {'gemini_nano_android_privacy' => ['Resources/PrivacyInfo.xcprivacy']}
+  s.resource_bundles = {'gemini_nano_android_privacy' => ['gemini_nano_android/Resources/PrivacyInfo.xcprivacy']}
 end

@@ -9,7 +9,7 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: "gemini-nano-android", targets: ["gemini_nano_android"])
+        .library(name: "gemini_nano_android", targets: ["gemini_nano_android"])
     ],
     dependencies: [],
     targets: [
@@ -18,7 +18,7 @@ let package = Package(
             dependencies: [],
             path: "Classes",
             resources: [
-                .process("../Resources")
+                .process("Resources")
             ]
         )
     ]

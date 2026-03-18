@@ -1,3 +1,8 @@
+## 1.1.2
+
+* **Fix:** Restructured the `ios` directory to match the specific SPM requirement of pub.dev (`ios/gemini_nano_android/Package.swift`).
+* **Fix:** Updated paths in `Package.swift` and `podspec` to reflect the new directory structure.
+
 ## 1.1.1
 
 * **Feat:** Added support for Swift Package Manager (SPM) for iOS to comply with pub.dev requirements.
