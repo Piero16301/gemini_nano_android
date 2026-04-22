@@ -223,7 +223,9 @@ class _MyAppState extends State<MyApp> {
     } else {
       return [
         ElevatedButton.icon(
-          onPressed: _isGenerating ? null : _pickImage,
+          onPressed: (_isAvailable == false || _isGenerating)
+              ? null
+              : _pickImage,
           icon: const Icon(Icons.image),
           label: const Text('Pick Image (Optional)'),
         ),

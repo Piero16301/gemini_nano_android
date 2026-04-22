@@ -1,6 +1,8 @@
 # Gemini Nano for Android
 
 [![pub package](https://img.shields.io/pub/v/gemini_nano_android.svg)](https://pub.dev/packages/gemini_nano_android)
+[![pub points](https://img.shields.io/pub/points/gemini_nano_android?color=2E8B57&label=pub%20points)](https://pub.dev/packages/gemini_nano_android/score)
+[![code factor](https://www.codefactor.io/repository/github/Piero16301/gemini_nano_android/badge)](https://www.codefactor.io/repository/github/Piero16301/gemini_nano_android)
 [![analysis](https://github.com/Piero16301/gemini_nano_android/actions/workflows/code-analysis.yml/badge.svg)](https://github.com/Piero16301/gemini_nano_android/actions)
 [![codecov](https://codecov.io/gh/Piero16301/gemini_nano_android/graph/badge.svg)](https://codecov.io/gh/Piero16301/gemini_nano_android)
 [![Star on Github](https://img.shields.io/github/stars/Piero16301/gemini_nano_android.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/Piero16301/gemini_nano_android)

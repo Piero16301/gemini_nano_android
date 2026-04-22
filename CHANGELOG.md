@@ -1,3 +1,10 @@
+## 1.1.3
+
+* **Android:** Updated `genai-prompt` dependency to `1.0.0-beta2`.
+* **Android:** Updated default model version to `nano-v4`.
+* **Example:** Added availability check to image picker button.
+* **Example:** Updated `cupertino_icons` dependency and cleaned up Gradle configuration.
+
 ## 1.1.2
 
 * **Fix:** Restructured the `ios` directory to match the specific SPM requirement of pub.dev (`ios/gemini_nano_android/Package.swift`).

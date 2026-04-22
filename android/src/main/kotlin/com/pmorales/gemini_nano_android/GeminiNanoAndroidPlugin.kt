@@ -68,9 +68,8 @@ class GeminiNanoAndroidPlugin : FlutterPlugin, MethodCallHandler {
     private fun getModelVersion(result: Result) {
         executor.execute {
             try {
-                // TODO: Implement logic to detect actual model version if API becomes available
-                // Currently defaulting to "nano-v3" for supported devices
-                val version = "nano-v3"
+                // Currently defaulting to "nano-v4" for supported devices
+                val version = "nano-v4"
                 Handler(Looper.getMainLooper()).post { result.success(version) }
             } catch (e: Exception) {
                 Handler(Looper.getMainLooper()).post {
