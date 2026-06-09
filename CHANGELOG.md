@@ -1,3 +1,8 @@
+## 1.2.0
+
+* Updates minimum supported SDK version to Flutter 3.44/Dart 3.12.
+* Migrates to use the built-in Kotlin DSL for Android Gradle.
+
 ## 1.1.3
 
 * **Android:** Updated `genai-prompt` dependency to `1.0.0-beta2`.

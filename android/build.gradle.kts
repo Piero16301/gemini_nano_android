@@ -1,30 +1,9 @@
-group = "com.pmorales.gemini_nano_android"
-version = "1.0-SNAPSHOT"
-
-buildscript {
-    val kotlinVersion = "2.2.20"
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath("com.android.tools.build:gradle:8.11.1")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
 plugins {
     id("com.android.library")
-    id("kotlin-android")
 }
+
+group = "com.pmorales.gemini_nano_android"
+version = "1.0-SNAPSHOT"
 
 android {
     namespace = "com.pmorales.gemini_nano_android"
@@ -37,7 +16,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
 
     sourceSets {
@@ -69,6 +48,8 @@ android {
         }
     }
 }
+
+
 
 dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")

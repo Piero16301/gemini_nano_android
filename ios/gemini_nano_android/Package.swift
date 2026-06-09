@@ -11,7 +11,9 @@ let package = Package(
     products: [
         .library(name: "gemini_nano_android", targets: ["gemini_nano_android"])
     ],
-    dependencies: [],
+    dependencies: [
+        .package(name: "FlutterFramework", path: "../FlutterFramework")
+    ],
     targets: [
         .target(
             name: "gemini_nano_android",
