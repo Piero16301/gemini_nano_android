@@ -24,8 +24,9 @@ class MethodChannelGeminiNanoAndroid extends GeminiNanoAndroidPlatform {
   @override
   Future<bool> isAvailable() async {
     try {
-      final bool? result =
-          await methodChannel.invokeMethod<bool>('isAvailable');
+      final bool? result = await methodChannel.invokeMethod<bool>(
+        'isAvailable',
+      );
       return result ?? false;
     } on PlatformException catch (_) {
       return false;
@@ -42,16 +43,16 @@ class MethodChannelGeminiNanoAndroid extends GeminiNanoAndroidPlatform {
     int candidateCount = 1,
     int maxOutputTokens = 256,
   }) async {
-    final List<String>? result =
-        await methodChannel.invokeListMethod<String>('generateText', {
-      'prompt': prompt,
-      'image': image,
-      'temperature': temperature,
-      'seed': seed,
-      'topK': topK,
-      'candidateCount': candidateCount,
-      'maxOutputTokens': maxOutputTokens,
-    });
+    final List<String>? result = await methodChannel
+        .invokeListMethod<String>('generateText', {
+          'prompt': prompt,
+          'image': image,
+          'temperature': temperature,
+          'seed': seed,
+          'topK': topK,
+          'candidateCount': candidateCount,
+          'maxOutputTokens': maxOutputTokens,
+        });
     if (result == null) {
       throw PlatformException(
         code: 'NULL_RESPONSE',

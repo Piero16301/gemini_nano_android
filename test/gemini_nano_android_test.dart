@@ -24,8 +24,7 @@ class MockGeminiNanoAndroidPlatform
     int? topK,
     int? candidateCount,
     int? maxOutputTokens,
-  }) =>
-      Future.value(['mocked response']);
+  }) => Future.value(['mocked response']);
 }
 
 void main() {
@@ -60,9 +59,8 @@ void main() {
         MockGeminiNanoAndroidPlatform();
     GeminiNanoAndroidPlatform.instance = fakePlatform;
 
-    expect(
-      await geminiNanoAndroid.generate(prompt: 'prompt'),
-      ['mocked response'],
-    );
+    expect(await geminiNanoAndroid.generate(prompt: 'prompt'), [
+      'mocked response',
+    ]);
   });
 }

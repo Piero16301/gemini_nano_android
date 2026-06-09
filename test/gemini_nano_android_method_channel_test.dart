@@ -10,24 +10,21 @@ void main() {
 
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-      channel,
-      (MethodCall methodCall) async {
-        switch (methodCall.method) {
-          case 'getModelVersion':
-            return 'nano-v3';
-          case 'isAvailable':
-            return true;
-          case 'generateText':
-            if (methodCall.arguments['prompt'] == 'test prompt') {
-              return ['Generated text'];
-            }
-            return null;
-          default:
-            return null;
-        }
-      },
-    );
+        .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+          switch (methodCall.method) {
+            case 'getModelVersion':
+              return 'nano-v3';
+            case 'isAvailable':
+              return true;
+            case 'generateText':
+              if (methodCall.arguments['prompt'] == 'test prompt') {
+                return ['Generated text'];
+              }
+              return null;
+            default:
+              return null;
+          }
+        });
   });
 
   tearDown(() {
@@ -44,17 +41,14 @@ void main() {
   });
 
   test('generate', () async {
-    expect(
-      await platform.generate(prompt: 'test prompt'),
-      ['Generated text'],
-    );
+    expect(await platform.generate(prompt: 'test prompt'), ['Generated text']);
   });
 
   test('isAvailable returns false on PlatformException', () async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-      throw PlatformException(code: 'ERROR');
-    });
+          throw PlatformException(code: 'ERROR');
+        });
 
     expect(await platform.isAvailable(), false);
   });
@@ -62,8 +56,8 @@ void main() {
   test('generate throws PlatformException on null response', () async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-      return null;
-    });
+          return null;
+        });
 
     expect(
       () => platform.generate(prompt: 'prompt'),
